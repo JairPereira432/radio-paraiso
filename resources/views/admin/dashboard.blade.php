@@ -1,57 +1,62 @@
 @extends('layouts.app')
-@section('title', 'Panel Admin')
-
+@section('title','Panel Admin — Radio Paraíso')
 @section('content')
 <div class="max-w-7xl mx-auto px-4 py-10">
-    <h1 class="font-display text-3xl font-bold text-gold mb-8">⚙️ Panel de Administración</h1>
+    <p class="section-title mb-1">Administración</p>
+    <h1 class="text-3xl font-black text-gray-800 mb-8">⚙️ Panel de Control</h1>
 
-    {{-- Stats --}}
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
         @foreach([
-            ['Usuarios',    $stats['users'],    '👥', 'blue'],
-            ['Noticias',    $stats['news'],     '📰', 'green'],
-            ['Sin leer',    $stats['contacts'], '📬', 'yellow'],
-            ['Comentarios', $stats['comments'], '💬', 'purple'],
+            ['Usuarios',    $stats['users'],    '👥', '#00d4aa'],
+            ['Noticias',    $stats['news'],     '📰', '#f9c74f'],
+            ['Sin leer',    $stats['contacts'], '📬', '#f8961e'],
+            ['Comentarios', $stats['comments'], '💬', '#90be6d'],
         ] as [$label,$count,$icon,$color])
-        <div class="bg-radio-light border border-gold/20 rounded-xl p-5 text-center">
+        <div class="card-rp p-5 text-center relative overflow-hidden">
+            <div class="absolute top-0 left-0 right-0 h-1" style="background:{{ $color }};"></div>
             <div class="text-3xl mb-2">{{ $icon }}</div>
-            <p class="font-display text-3xl font-black text-gold">{{ $count }}</p>
-            <p class="text-gray-400 text-sm">{{ $label }}</p>
+            <p class="text-3xl font-black" style="color:{{ $color }};">{{ $count }}</p>
+            <p class="text-gray-400 text-sm mt-1 font-semibold">{{ $label }}</p>
         </div>
         @endforeach
     </div>
 
-    {{-- Quick Links --}}
-    <div class="grid md:grid-cols-3 gap-4 mb-10">
-        <a href="{{ route('admin.news.create') }}"
-           class="bg-gold text-radio rounded-xl p-5 font-semibold hover:bg-gold-dark transition text-center">
-            ✏️ Nueva Noticia
-        </a>
+    <div class="grid md:grid-cols-4 gap-4 mb-10">
+        <a href="{{ route('admin.news.create') }}" class="btn-primary text-center">✏️ Nueva Noticia</a>
         <a href="{{ route('admin.news.index') }}"
-           class="bg-radio-light border border-gold/30 rounded-xl p-5 font-semibold hover:border-gold transition text-center">
-            📋 Gestionar Noticias
+           class="card-rp p-4 text-center font-bold text-gray-600 hover:shadow-lg transition hover:-translate-y-1">
+            📋 Noticias
+        </a>
+        <a href="{{ route('admin.videos.index') }}"
+           class="card-rp p-4 text-center font-bold text-gray-600 hover:shadow-lg transition hover:-translate-y-1">
+            🎬 Películas
         </a>
         <a href="{{ route('home') }}" target="_blank"
-           class="bg-radio-light border border-gold/30 rounded-xl p-5 font-semibold hover:border-gold transition text-center">
+           class="card-rp p-4 text-center font-bold text-gray-600 hover:shadow-lg transition hover:-translate-y-1">
             🌐 Ver Sitio
         </a>
     </div>
 
-    {{-- Mensajes recientes --}}
-    <div class="bg-radio-light border border-gold/20 rounded-2xl p-6">
-        <h2 class="font-display text-xl font-bold text-gold mb-4">📬 Últimos Mensajes</h2>
+    <div class="card-rp p-6 relative overflow-hidden">
+        <div class="absolute top-0 left-0 right-0 h-1"
+             style="background:linear-gradient(90deg,#00d4aa,#00b4d8,#f9c74f,#f8961e);"></div>
+        <h2 class="text-lg font-black text-gray-800 mb-4">📬 Últimos Mensajes</h2>
         <div class="space-y-3">
             @forelse($recent_contacts as $c)
-            <div class="flex items-center justify-between border-b border-gold/10 pb-3">
+            <div class="flex items-center justify-between border-b pb-3" style="border-color:#e0faf5;">
                 <div>
-                    <p class="font-medium">{{ $c->name }}
-                        @if(!$c->read) <span class="text-xs bg-red-600 px-2 py-0.5 rounded-full ml-2">Nuevo</span> @endif
+                    <p class="text-gray-700 font-bold text-sm">
+                        {{ $c->name }}
+                        @if(!$c->read)
+                        <span class="text-xs text-white px-2 py-0.5 rounded-full ml-2 font-bold"
+                              style="background:linear-gradient(135deg,#f8961e,#f9c74f);">Nuevo</span>
+                        @endif
                     </p>
-                    <p class="text-gray-400 text-sm">{{ $c->type }} · {{ $c->created_at->diffForHumans() }}</p>
+                    <p class="text-gray-400 text-xs">{{ $c->type }} · {{ $c->created_at->diffForHumans() }}</p>
                 </div>
             </div>
             @empty
-            <p class="text-gray-400">No hay mensajes.</p>
+            <p class="text-gray-400 text-sm">No hay mensajes.</p>
             @endforelse
         </div>
     </div>

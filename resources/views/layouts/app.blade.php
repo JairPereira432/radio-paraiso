@@ -4,38 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Radio Paraíso TV Digital')</title>
-    <meta name="description" content="Los Grandes Clásicos de la Música - 70s, 80s y 90s">
-
-    {{-- TailwindCSS CDN --}}
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        gold:  { DEFAULT: '#D4A843', dark: '#B8882A' },
-                        radio: { DEFAULT: '#1a0533', light: '#2d0a52' },
-                    },
-                    fontFamily: {
-                        display: ['"Playfair Display"', 'serif'],
-                        body:    ['"Inter"', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
-
-    {{-- Google Fonts --}}
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-
-    {{-- Alpine.js --}}
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-
-    {{-- Firebase SDK --}}
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
         import { getFirestore }  from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
-
         const firebaseConfig = {
             apiKey:            "{{ env('FIREBASE_API_KEY') }}",
             authDomain:        "{{ env('FIREBASE_AUTH_DOMAIN') }}",
@@ -47,139 +21,185 @@
         window.firebaseApp = initializeApp(firebaseConfig);
         window.db = getFirestore(window.firebaseApp);
     </script>
-
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+        [x-cloak] { display: none !important; }
+        body { background: #f8fffd; }
+        .grad-text { background: linear-gradient(90deg,#00d4aa,#00b4d8,#f9c74f,#f8961e); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; font-weight:800; }
+        .grad-bg   { background: linear-gradient(135deg,#00d4aa,#00b4d8); }
+        .card-rp   { background:#fff; border-radius:16px; box-shadow:0 4px 20px #00d4aa12; border:1px solid #e0faf5; }
+        .btn-primary   { background:linear-gradient(135deg,#00d4aa,#00b4d8); color:#fff; border:none; padding:11px 24px; border-radius:10px; font-size:14px; font-weight:700; cursor:pointer; box-shadow:0 4px 20px #00d4aa44; transition:transform 0.2s; display:inline-block; text-decoration:none; }
+        .btn-primary:hover { transform:translateY(-2px); }
+        .btn-secondary { background:#fff; color:#f8961e; border:2px solid #f9c74f88; padding:11px 24px; border-radius:10px; font-size:14px; font-weight:700; cursor:pointer; transition:all 0.2s; display:inline-block; text-decoration:none; }
+        .btn-secondary:hover { background:#fffbf0; border-color:#f8961e; transform:translateY(-2px); }
+        .input-rp  { width:100%; background:#f8fffd; border:1.5px solid #b2f0e0; border-radius:10px; padding:12px 16px; font-size:14px; color:#111; outline:none; transition:border-color 0.2s; }
+        .input-rp:focus { border-color:#00d4aa; box-shadow:0 0 0 3px #00d4aa18; }
+        .select-rp { width:100%; background:#f8fffd; border:1.5px solid #b2f0e0; border-radius:10px; padding:12px 16px; font-size:14px; color:#111; outline:none; }
+        .section-title { font-size:11px; text-transform:uppercase; letter-spacing:2px; font-weight:800; background:linear-gradient(90deg,#00d4aa,#00b4d8,#f9c74f); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+        .badge-teal { background:#e0fff8; color:#00a896; border:1px solid #00d4aa44; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:600; }
+        .dot-live { width:8px; height:8px; border-radius:50%; background:#00d4aa; box-shadow:0 0 10px #00d4aa; animation:pulse-dot 1.2s infinite; display:inline-block; }
+        @keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.6)} }
+        .wave { display:flex; align-items:center; gap:2px; }
+        .wb { width:3px; border-radius:2px; background:linear-gradient(180deg,#00d4aa,#00b4d8); animation:wave 1s ease-in-out infinite; }
+        .wb:nth-child(1){height:8px;animation-delay:0s}
+        .wb:nth-child(2){height:14px;animation-delay:0.1s}
+        .wb:nth-child(3){height:10px;animation-delay:0.2s}
+        .wb:nth-child(4){height:16px;animation-delay:0.3s}
+        .wb:nth-child(5){height:8px;animation-delay:0.4s}
+        @keyframes wave { 0%,100%{transform:scaleY(1)} 50%{transform:scaleY(0.4)} }
+        ::-webkit-scrollbar { width:6px; }
+        ::-webkit-scrollbar-thumb { background:#00d4aa; border-radius:3px; }
+    </style>
     @stack('styles')
 </head>
-<body class="bg-radio text-white font-body" x-data="{ mobileMenu: false }">
+<body x-data="{ mobileMenu: false }">
 
-{{-- ══ NAVBAR ══════════════════════════════════════════════ --}}
-<nav class="bg-radio-light border-b border-gold/30 sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
+{{-- TOP BAR --}}
+<div style="background:linear-gradient(90deg,#00d4aa,#00b4d8,#48cae4,#f9c74f,#f8961e);"
+     class="py-1.5 px-4 hidden md:flex justify-center gap-8">
+    <span class="text-white text-xs font-semibold">🟢 Señal Online</span>
+    <span class="text-white text-xs font-semibold">🎙 128kbps HD</span>
+    <span class="text-white text-xs font-semibold">🌍 En vivo 24/7</span>
+    <span class="text-white text-xs font-semibold">📡 Radio Digital</span>
+</div>
 
-        {{-- Logo --}}
-        <a href="{{ route('home') }}" class="flex items-center gap-2">
-            <div class="w-10 h-10 bg-gold rounded-full flex items-center justify-center text-radio font-black text-sm">RP</div>
-            <span class="font-display text-gold font-bold text-lg hidden sm:block">Radio Paraíso</span>
+{{-- NAVBAR --}}
+<nav class="bg-white sticky top-0 z-50"
+     style="border-bottom:3px solid transparent; border-image:linear-gradient(90deg,#00d4aa,#00b4d8,#f9c74f,#f8961e) 1; box-shadow:0 2px 20px #00d4aa18;">
+    <div class="max-w-7xl mx-auto px-4 flex items-center justify-between h-14">
+        <a href="{{ route('home') }}" class="flex items-center gap-2.5">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center text-white text-xs font-black flex-shrink-0"
+                 style="background:linear-gradient(135deg,#00d4aa,#00b4d8,#f9c74f); box-shadow:0 4px 15px #00d4aa44;">RP</div>
+            <span class="grad-text text-base hidden sm:block">Radio Paraíso</span>
         </a>
 
-        {{-- Nav Links (desktop) --}}
-        <div class="hidden md:flex items-center gap-6 text-sm font-medium">
-            <a href="{{ route('home') }}"     class="hover:text-gold transition">Inicio</a>
-            <a href="{{ route('radio') }}"    class="hover:text-gold transition">📻 Radio en Vivo</a>
-            <a href="{{ route('tv') }}"       class="hover:text-gold transition">📺 TV/Video</a>
-            <a href="{{ route('news.index')}}" class="hover:text-gold transition">Noticias</a>
-            <a href="{{ route('programs') }}" class="hover:text-gold transition">Programación</a>
-            <a href="{{ route('contact') }}"  class="hover:text-gold transition">Contacto</a>
+        <div class="hidden md:flex items-center gap-5 text-sm">
+            <a href="{{ route('home') }}"       class="text-gray-500 hover:text-teal-500 transition font-semibold">Inicio</a>
+            <a href="{{ route('radio') }}"      class="text-gray-500 hover:text-teal-500 transition font-semibold">📻 Radio</a>
+            <a href="{{ route('tv') }}"         class="text-gray-500 hover:text-yellow-500 transition font-semibold">🎬 Películas</a>
+            <a href="{{ route('news.index') }}" class="text-gray-500 hover:text-orange-500 transition font-semibold">Noticias</a>
+            <a href="{{ route('programs') }}"   class="text-gray-500 hover:text-cyan-500 transition font-semibold">Programación</a>
+            <a href="{{ route('contact') }}"    class="text-gray-500 hover:text-teal-500 transition font-semibold">Contacto</a>
         </div>
 
-        {{-- Auth Buttons --}}
         <div class="hidden md:flex items-center gap-3">
             @guest
-                <a href="{{ route('login') }}"    class="text-sm hover:text-gold transition">Entrar</a>
-                <a href="{{ route('register') }}" class="bg-gold text-radio px-4 py-1.5 rounded-full text-sm font-semibold hover:bg-gold-dark transition">Registro</a>
+                <a href="{{ route('login') }}" class="text-sm text-gray-500 hover:text-teal-500 font-semibold transition">Entrar</a>
+                <a href="{{ route('register') }}" class="text-sm text-white px-5 py-2 rounded-full font-bold"
+                   style="background:linear-gradient(135deg,#00d4aa,#00b4d8); box-shadow:0 4px 15px #00d4aa44;">✨ Registro</a>
             @else
                 @if(auth()->user()->isEditor())
-                    <a href="{{ route('admin.dashboard') }}" class="text-sm text-gold hover:underline">Panel Admin</a>
+                    <a href="{{ route('admin.dashboard') }}" class="text-sm font-bold" style="color:#00d4aa;">⚙️ Admin</a>
                 @endif
-                <span class="text-sm text-gray-300">{{ auth()->user()->name }}</span>
+                <span class="text-sm text-gray-500 font-semibold">{{ auth()->user()->name }}</span>
                 <form method="POST" action="{{ route('logout') }}" class="inline">
                     @csrf
-                    <button class="text-sm text-red-400 hover:text-red-300">Salir</button>
+                    <button class="text-sm text-red-400 hover:text-red-600 font-semibold transition">Salir</button>
                 </form>
             @endguest
         </div>
 
-        {{-- Hamburger --}}
-        <button class="md:hidden" @click="mobileMenu = !mobileMenu">
+        <button class="md:hidden text-gray-400" @click="mobileMenu = !mobileMenu">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
             </svg>
         </button>
     </div>
 
-    {{-- Mobile Menu --}}
-    <div x-show="mobileMenu" x-cloak class="md:hidden bg-radio-light border-t border-gold/20 px-4 py-3 space-y-2 text-sm">
-        <a href="{{ route('home') }}"      class="block py-2 hover:text-gold">Inicio</a>
-        <a href="{{ route('radio') }}"     class="block py-2 hover:text-gold">📻 Radio en Vivo</a>
-        <a href="{{ route('tv') }}"        class="block py-2 hover:text-gold">📺 TV/Video</a>
-        <a href="{{ route('news.index')}}" class="block py-2 hover:text-gold">Noticias</a>
-        <a href="{{ route('programs') }}"  class="block py-2 hover:text-gold">Programación</a>
-        <a href="{{ route('contact') }}"   class="block py-2 hover:text-gold">Contacto</a>
+    <div x-show="mobileMenu" x-cloak class="md:hidden bg-white border-t px-4 py-3 space-y-1"
+         style="border-color:#e0faf5;">
+        <a href="{{ route('home') }}"       class="block py-2 text-gray-500 font-semibold">Inicio</a>
+        <a href="{{ route('radio') }}"      class="block py-2 text-gray-500 font-semibold">📻 Radio en Vivo</a>
+        <a href="{{ route('tv') }}"         class="block py-2 text-gray-500 font-semibold">🎬 Películas</a>
+        <a href="{{ route('news.index') }}" class="block py-2 text-gray-500 font-semibold">Noticias</a>
+        <a href="{{ route('programs') }}"   class="block py-2 text-gray-500 font-semibold">Programación</a>
+        <a href="{{ route('contact') }}"    class="block py-2 text-gray-500 font-semibold">Contacto</a>
         @guest
-            <a href="{{ route('login') }}"    class="block py-2 hover:text-gold">Entrar</a>
-            <a href="{{ route('register') }}" class="block py-2 text-gold font-semibold">Registro</a>
+            <a href="{{ route('login') }}"    class="block py-2 text-gray-500 font-semibold">Entrar</a>
+            <a href="{{ route('register') }}" class="block py-2 font-bold" style="color:#00d4aa;">✨ Registro</a>
         @endguest
     </div>
 </nav>
 
-{{-- ══ MINI PLAYER fijo en el fondo ═══════════════════════ --}}
-<div id="mini-player" class="fixed bottom-0 left-0 right-0 bg-radio-light border-t border-gold/30 z-40 px-4 py-2 flex items-center gap-3">
+{{-- MINI PLAYER --}}
+<div class="fixed bottom-0 left-0 right-0 z-40 bg-white px-4 py-2.5 flex items-center gap-3"
+     style="border-top:1px solid #e0faf5; box-shadow:0 -4px 20px #00d4aa0a;">
+    <div class="absolute top-0 left-0 right-0 h-1"
+         style="background:linear-gradient(90deg,#00d4aa,#00b4d8,#f9c74f,#f8961e,#90be6d);"></div>
     <button id="play-btn" onclick="togglePlay()"
-        class="w-10 h-10 bg-gold text-radio rounded-full flex items-center justify-center font-bold text-lg flex-shrink-0">▶</button>
+        class="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm flex-shrink-0"
+        style="background:linear-gradient(135deg,#00d4aa,#00b4d8); box-shadow:0 3px 12px #00d4aa44;">▶</button>
+    <div class="wave mr-1">
+        <div class="wb"></div><div class="wb"></div><div class="wb"></div>
+        <div class="wb"></div><div class="wb"></div>
+    </div>
     <div class="flex-1 min-w-0">
-        <p class="text-gold text-xs font-semibold">🎵 EN VIVO — Radio Paraíso</p>
-        <p id="now-playing" class="text-gray-300 text-xs truncate">Los Grandes Clásicos</p>
+        <p class="text-xs font-bold"
+           style="background:linear-gradient(90deg,#00d4aa,#00b4d8,#f9c74f); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">
+            🎵 EN VIVO — Radio Paraíso
+        </p>
+        <p class="text-gray-400 text-xs truncate">Los Grandes Clásicos · 70s · 80s · 90s</p>
     </div>
-    <div class="flex items-center gap-2">
-        <input type="range" id="volume" min="0" max="1" step="0.05" value="0.8"
-            onchange="setVolume(this.value)"
-            class="w-20 accent-gold hidden sm:block">
-    </div>
+    <input type="range" id="volume" min="0" max="1" step="0.05" value="0.8"
+           onchange="setVolume(this.value)" class="w-20 hidden sm:block accent-teal-400">
     <audio id="radio-audio" preload="none">
-        {{-- Cambia esta URL por tu stream real de Icecast/Shoutcast --}}
         <source src="https://TU_SERVIDOR_STREAMING:8000/radio" type="audio/mpeg">
     </audio>
 </div>
 
-{{-- ══ CONTENIDO ══════════════════════════════════════════ --}}
+{{-- CONTENIDO --}}
 <main class="pb-20">
     @if(session('success'))
-        <div class="max-w-7xl mx-auto px-4 mt-4">
-            <div class="bg-green-800/50 border border-green-500 text-green-200 px-4 py-3 rounded-lg">
-                {{ session('success') }}
-            </div>
+    <div class="max-w-7xl mx-auto px-4 mt-4">
+        <div class="px-4 py-3 rounded-xl text-sm font-semibold"
+             style="background:#e0fff8; border:1.5px solid #00d4aa55; color:#00a896;">
+            ✅ {{ session('success') }}
         </div>
+    </div>
     @endif
-
+    @if(session('error'))
+    <div class="max-w-7xl mx-auto px-4 mt-4">
+        <div class="px-4 py-3 rounded-xl text-sm font-semibold"
+             style="background:#fff0f0; border:1.5px solid #f8961e55; color:#c8600a;">
+            ❌ {{ session('error') }}
+        </div>
+    </div>
+    @endif
     @yield('content')
 </main>
 
-{{-- ══ FOOTER ══════════════════════════════════════════════ --}}
-<footer class="bg-black/50 border-t border-gold/20 py-10 pb-24 text-center text-sm text-gray-400">
-    <p class="font-display text-gold text-xl mb-2">Radio Paraíso TV Digital</p>
-    <p class="mb-4">Los Grandes Clásicos de la Música · 70s · 80s · 90s</p>
-    <div class="flex justify-center gap-6 mb-4 text-2xl">
-        <a href="#" title="Facebook"  class="hover:scale-110 transition">📘</a>
-        <a href="#" title="Instagram" class="hover:scale-110 transition">📸</a>
-        <a href="#" title="YouTube"   class="hover:scale-110 transition">🎬</a>
-        <a href="#" title="WhatsApp"  class="hover:scale-110 transition">💬</a>
+{{-- FOOTER --}}
+<footer class="bg-white border-t pb-20 pt-10 text-center" style="border-color:#e0faf5;">
+    <div class="w-14 h-14 rounded-full flex items-center justify-center text-white font-black mx-auto mb-3"
+         style="background:linear-gradient(135deg,#00d4aa,#00b4d8,#f9c74f); box-shadow:0 4px 20px #00d4aa33;">RP</div>
+    <p class="grad-text text-xl mb-1">Radio Paraíso TV Digital</p>
+    <p class="text-gray-400 text-sm mb-5">Los Grandes Clásicos de la Música · 70s · 80s · 90s</p>
+    <div class="flex justify-center gap-5 mb-5 text-2xl">
+        <a href="#" class="hover:scale-110 transition">📘</a>
+        <a href="#" class="hover:scale-110 transition">📸</a>
+        <a href="#" class="hover:scale-110 transition">🎬</a>
+        <a href="#" class="hover:scale-110 transition">💬</a>
     </div>
-    <p>© {{ date('Y') }} Radio Paraíso TV Digital. Todos los derechos reservados.</p>
+    <div class="flex justify-center gap-6 text-xs text-gray-400 mb-4 font-semibold">
+        <a href="{{ route('home') }}"       class="hover:text-teal-500 transition">Inicio</a>
+        <a href="{{ route('radio') }}"      class="hover:text-teal-500 transition">Radio</a>
+        <a href="{{ route('tv') }}"         class="hover:text-yellow-500 transition">Películas</a>
+        <a href="{{ route('news.index') }}" class="hover:text-orange-500 transition">Noticias</a>
+        <a href="{{ route('contact') }}"    class="hover:text-teal-500 transition">Contacto</a>
+    </div>
+    <p class="text-gray-300 text-xs">© {{ date('Y') }} Radio Paraíso TV Digital. Todos los derechos reservados.</p>
 </footer>
 
-{{-- ══ SCRIPTS GLOBALES ════════════════════════════════════ --}}
 <script>
 const audio = document.getElementById('radio-audio');
 const playBtn = document.getElementById('play-btn');
 let playing = false;
-
 function togglePlay() {
-    if (playing) {
-        audio.pause();
-        playBtn.textContent = '▶';
-        playing = false;
-    } else {
-        audio.play();
-        playBtn.textContent = '⏸';
-        playing = true;
-    }
+    if (playing) { audio.pause(); playBtn.textContent='▶'; playing=false; }
+    else { audio.play(); playBtn.textContent='⏸'; playing=true; }
 }
-
-function setVolume(v) {
-    audio.volume = parseFloat(v);
-}
+function setVolume(v) { audio.volume = parseFloat(v); }
 </script>
-
 @stack('scripts')
 </body>
 </html>
