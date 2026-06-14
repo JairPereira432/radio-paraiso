@@ -6,19 +6,16 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('admins', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->enum('role', ['admin', 'editor', 'user'])->default('user');
-            $table->string('avatar')->nullable();
-            $table->string('firebase_uid')->nullable();
+            $table->enum('role', ['superadmin', 'editor'])->default('editor');
             $table->boolean('active')->default(true);
             $table->rememberToken();
             $table->timestamps();
         });
     }
-    public function down(): void { Schema::dropIfExists('users'); }
+    public function down(): void { Schema::dropIfExists('admins'); }
 };

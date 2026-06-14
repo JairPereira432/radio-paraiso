@@ -2,36 +2,27 @@
 namespace App\Http\Controllers;
 
 use App\Models\Contact;
+use App\Models\SiteSetting;
 use Illuminate\Http\Request;
 
 class ContactController extends Controller
 {
-    public function index() { return view('contact'); }
+    public function index()
+    {
+        $settings = SiteSetting::pluck('value', 'key');
+        return view('contact', compact('settings'));
+    }
 
     public function store(Request $request)
     {
         $request->validate([
-            'name'    => 'required|string|max:100',
+            'name'    => 'required|max:100',
             'email'   => 'required|email',
-            'type'    => 'required|in:peticion_musical,denuncia,nota_voz,contacto_general',
+            'subject' => 'nullable|max:200',
             'message' => 'required|min:10|max:1000',
-            'audio'   => 'nullable|file|mimes:mp3,wav,ogg,m4a|max:10240',
         ]);
 
-        $audio_path = null;
-        if ($request->hasFile('audio')) {
-            $audio_path = $request->file('audio')->store('audios', 'public');
-        }
-
-        Contact::create([
-            'name'       => $request->name,
-            'email'      => $request->email,
-            'phone'      => $request->phone,
-            'type'       => $request->type,
-            'message'    => $request->message,
-            'audio_file' => $audio_path,
-        ]);
-
-        return back()->with('success', '¡Mensaje enviado! Te responderemos pronto.');
+        Contact::create($request->only('name','email','subject','message'));
+        return back()->with('success','¡Mensaje enviado! Te responderemos pronto.');
     }
 }

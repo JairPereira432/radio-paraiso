@@ -1,24 +1,35 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Models\News;
+use App\Models\Slider;
 use App\Models\Program;
-use App\Models\Video;
+use App\Models\SiteSetting;
 use Carbon\Carbon;
 
 class HomeController extends Controller
 {
     public function index()
     {
-        $featured_news = News::published()->featured()->latest()->take(3)->get();
-        $latest_news   = News::published()->latest()->take(6)->get();
-        $today         = strtolower(Carbon::now()->locale('es')->dayName);
-        $current_program = Program::where('day', $today)
-            ->where('start_time', '<=', now()->format('H:i:s'))
-            ->where('end_time',   '>=', now()->format('H:i:s'))
-            ->first();
-        $featured_videos = Video::where('status','published')->where('featured',true)->take(4)->get();
+        $sliders = Slider::where('active', true)->orderBy('order')->get();
 
-        return view('home', compact('featured_news','latest_news','current_program','featured_videos'));
+        $now     = Carbon::now();
+        $hour    = $now->format('H:i:s');
+        $dayName = strtolower($now->locale('es')->dayName);
+
+        $dayType = match(true) {
+            in_array($dayName, ['lunes','martes','miércoles','jueves','viernes']) => 'lunes_viernes',
+            $dayName === 'sábado'  => 'sabados',
+            $dayName === 'domingo' => 'domingos',
+            default => 'todos'
+        };
+
+        $current_program = Program::where('active', true)
+            ->whereIn('day_type', [$dayType, 'todos'])
+            ->where('start_time', '<=', $hour)
+            ->where('end_time',   '>=', $hour)
+            ->first();
+
+        $settings = SiteSetting::pluck('value', 'key');
+        return view('home', compact('sliders','current_program','settings'));
     }
 }

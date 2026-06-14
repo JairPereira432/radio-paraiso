@@ -1,87 +1,172 @@
 @extends('layouts.app')
-@section('title','Programación — Radio Paraíso')
+@section('title', 'Programación — ' . ($settings['radio_name'] ?? 'Radio Paraíso'))
 @section('content')
-<div class="max-w-7xl mx-auto px-4 py-12">
-    <p class="section-title mb-1">Horarios</p>
-    <h1 class="text-3xl font-black text-gray-800 mb-2">📅 Programación Semanal</h1>
-    <p class="text-gray-400 mb-10">Todos nuestros programas y sus horarios</p>
 
-    <div x-data="{ dia: '{{ strtolower(\Carbon\Carbon::now()->locale('es')->dayName) }}' }">
-        <div class="flex flex-wrap gap-2 mb-8">
-            @foreach(['lunes','martes','miércoles','jueves','viernes','sábado','domingo'] as $day)
-            <button @click="dia = '{{ $day }}'"
-                :class="dia === '{{ $day }}' ? 'text-white' : 'text-gray-500 bg-white hover:border-teal-400'"
-                :style="dia === '{{ $day }}' ? 'background:linear-gradient(135deg,#00d4aa,#00b4d8);border-color:transparent;box-shadow:0 4px 15px #00d4aa44;' : ''"
-                class="px-4 py-2 rounded-full text-sm font-bold transition border capitalize"
-                style="border-color:#e0faf5;">
-                {{ ucfirst($day) }}
-            </button>
-            @endforeach
-        </div>
+{{-- HERO --}}
+<section class="py-16 text-center relative overflow-hidden"
+         style="background:linear-gradient(135deg,#0a2a1a 0%,#0d3b2e 100%);">
+    <div class="absolute inset-0 opacity-20"
+         style="background:radial-gradient(circle at 30% 50%,#00d4aa,transparent 60%),radial-gradient(circle at 70% 50%,#f9c74f,transparent 60%);"></div>
+    <div class="relative z-10 max-w-3xl mx-auto px-4">
+        <p class="section-title mb-2">Programación</p>
+        <h1 class="text-4xl md:text-5xl font-black text-white mb-3">NUESTRA PARRILLA DE CONTENIDOS</h1>
+        <p class="text-white/60">Encuentra tu programa favorito y no te pierdas ningún momento</p>
+    </div>
+</section>
 
-        @foreach(['lunes','martes','miércoles','jueves','viernes','sábado','domingo'] as $day)
-        <div x-show="dia === '{{ $day }}'" x-cloak>
-            @php
-                $dayPrograms = isset($programs) ? $programs->where('day',$day)->sortBy('start_time') : collect();
-            @endphp
-            @if($dayPrograms->isEmpty())
-            <div class="text-center py-20">
-                <p class="text-5xl mb-4">🎵</p>
-                <p class="text-gray-600 text-lg font-bold">Música continua todo el día</p>
-                <p class="text-gray-400 text-sm mt-1">Los Grandes Clásicos sin parar</p>
-            </div>
-            @else
-            <div class="space-y-3">
-                @foreach($dayPrograms as $program)
-                @php
-                    $now = \Carbon\Carbon::now();
-                    $isNow = $now->format('H:i:s') >= $program->start_time
-                          && $now->format('H:i:s') <= $program->end_time
-                          && strtolower($now->locale('es')->dayName) === $day;
-                @endphp
-                <div class="card-rp flex gap-4 items-center p-5 transition hover:shadow-lg
-                    {{ $isNow ? 'ring-2' : '' }}"
-                    style="{{ $isNow ? 'ring-color:#00d4aa; border-top:3px solid #00d4aa;' : '' }}">
-                    <div class="text-center min-w-[70px] flex-shrink-0">
-                        <p class="font-bold text-sm" style="color:#00a896;">{{ substr($program->start_time,0,5) }}</p>
-                        <p class="text-gray-400 text-xs">{{ substr($program->end_time,0,5) }}</p>
-                    </div>
-                    <div class="flex-1">
-                        <div class="flex items-center gap-2 flex-wrap">
-                            <h3 class="font-black text-gray-800">{{ $program->name }}</h3>
-                            @if($isNow)
-                            <span class="inline-flex items-center gap-1 text-xs font-bold px-3 py-1 rounded-full text-white"
-                                  style="background:linear-gradient(135deg,#00d4aa,#00b4d8);">
-                                <span class="dot-live" style="width:6px;height:6px;"></span> EN VIVO
-                            </span>
-                            @endif
-                        </div>
-                        @if($program->host)
-                        <p class="text-sm mt-0.5 font-semibold" style="color:#00a896;">con {{ $program->host }}</p>
-                        @endif
-                        @if($program->description)
-                        <p class="text-gray-400 text-sm mt-1">{{ $program->description }}</p>
-                        @endif
-                    </div>
-                    @if($program->image)
-                    <img src="{{ Storage::url($program->image) }}" alt="{{ $program->name }}"
-                         class="w-16 h-16 rounded-xl object-cover flex-shrink-0">
-                    @else
-                    <div class="w-16 h-16 rounded-xl flex items-center justify-center text-2xl flex-shrink-0"
-                         style="background:linear-gradient(135deg,#e0fff8,#e0f8ff);">🎙</div>
-                    @endif
-                </div>
-                @endforeach
-            </div>
-            @endif
-        </div>
-        @endforeach
+{{-- PROGRAMACIÓN --}}
+<section class="max-w-4xl mx-auto px-4 py-14" x-data="{ tab: 'lv' }">
+
+    {{-- Tabs --}}
+    <div class="flex flex-wrap justify-center gap-3 mb-10">
+        <button @click="tab='lv'"
+            :class="tab==='lv' ? 'text-white shadow-lg' : 'bg-white text-gray-500 border border-gray-200'"
+            :style="tab==='lv' ? 'background:linear-gradient(135deg,#00d4aa,#00b4d8);' : ''"
+            class="px-6 py-2.5 rounded-full text-sm font-bold transition">
+            Lunes a Viernes
+        </button>
+        <button @click="tab='sab'"
+            :class="tab==='sab' ? 'text-white shadow-lg' : 'bg-white text-gray-500 border border-gray-200'"
+            :style="tab==='sab' ? 'background:linear-gradient(135deg,#f9c74f,#f8961e);' : ''"
+            class="px-6 py-2.5 rounded-full text-sm font-bold transition">
+            Sábados
+        </button>
+        <button @click="tab='dom'"
+            :class="tab==='dom' ? 'text-white shadow-lg' : 'bg-white text-gray-500 border border-gray-200'"
+            :style="tab==='dom' ? 'background:linear-gradient(135deg,#90be6d,#43aa8b);' : ''"
+            class="px-6 py-2.5 rounded-full text-sm font-bold transition">
+            Domingos
+        </button>
+        <button @click="tab='all'"
+            :class="tab==='all' ? 'text-white shadow-lg' : 'bg-white text-gray-500 border border-gray-200'"
+            :style="tab==='all' ? 'background:linear-gradient(135deg,#48cae4,#00b4d8);' : ''"
+            class="px-6 py-2.5 rounded-full text-sm font-bold transition">
+            Todos
+        </button>
     </div>
 
-    <div class="card-rp mt-12 p-6 text-center">
-        <p class="section-title mb-1">Fuera del horario programado</p>
-        <p class="text-gray-400 text-sm mb-4">Los Grandes Clásicos de los 70s, 80s y 90s sin parar</p>
-        <a href="{{ route('radio') }}" class="btn-primary">📻 Escuchar Ahora</a>
+    {{-- Lunes a Viernes --}}
+    <div x-show="tab==='lv'" x-cloak class="space-y-4">
+        @forelse($lv as $program)
+        <div class="card-rp flex gap-4 items-center p-5 hover:shadow-lg transition"
+             style="border-left:4px solid {{ $program->color }};">
+            <div class="text-center min-w-[80px] flex-shrink-0">
+                <p class="font-black text-sm" style="color:{{ $program->color }};">{{ substr($program->start_time,0,5) }}</p>
+                <p class="text-gray-400 text-xs">{{ substr($program->end_time,0,5) }}</p>
+            </div>
+            <div class="flex-1">
+                <h3 class="font-black text-gray-800 text-base">{{ $program->name }}</h3>
+                @if($program->host)
+                <p class="text-sm font-semibold mt-0.5" style="color:{{ $program->color }};">🎙 {{ $program->host }}</p>
+                @endif
+                @if($program->description)
+                <p class="text-gray-400 text-sm mt-1">{{ $program->description }}</p>
+                @endif
+            </div>
+            <span class="text-xs font-bold text-white px-3 py-1.5 rounded-full flex-shrink-0"
+                  style="background:{{ $program->color }};">
+                {{ $program->day_label }}
+            </span>
+        </div>
+        @empty
+        <div class="text-center py-16 text-gray-400">
+            <p class="text-4xl mb-3">📅</p>
+            <p class="font-semibold">No hay programas configurados.</p>
+        </div>
+        @endforelse
     </div>
-</div>
+
+    {{-- Sábados --}}
+    <div x-show="tab==='sab'" x-cloak class="space-y-4">
+        @forelse($sabados as $program)
+        <div class="card-rp flex gap-4 items-center p-5 hover:shadow-lg transition"
+             style="border-left:4px solid {{ $program->color }};">
+            <div class="text-center min-w-[80px] flex-shrink-0">
+                <p class="font-black text-sm" style="color:{{ $program->color }};">{{ substr($program->start_time,0,5) }}</p>
+                <p class="text-gray-400 text-xs">{{ substr($program->end_time,0,5) }}</p>
+            </div>
+            <div class="flex-1">
+                <h3 class="font-black text-gray-800 text-base">{{ $program->name }}</h3>
+                @if($program->host)
+                <p class="text-sm font-semibold mt-0.5" style="color:{{ $program->color }};">🎙 {{ $program->host }}</p>
+                @endif
+                @if($program->description)
+                <p class="text-gray-400 text-sm mt-1">{{ $program->description }}</p>
+                @endif
+            </div>
+            <span class="text-xs font-bold text-white px-3 py-1.5 rounded-full flex-shrink-0"
+                  style="background:{{ $program->color }};">
+                {{ $program->day_label }}
+            </span>
+        </div>
+        @empty
+        <div class="text-center py-16 text-gray-400">
+            <p class="text-4xl mb-3">📅</p>
+            <p class="font-semibold">No hay programas para sábados.</p>
+        </div>
+        @endforelse
+    </div>
+
+    {{-- Domingos --}}
+    <div x-show="tab==='dom'" x-cloak class="space-y-4">
+        @forelse($domingos as $program)
+        <div class="card-rp flex gap-4 items-center p-5 hover:shadow-lg transition"
+             style="border-left:4px solid {{ $program->color }};">
+            <div class="text-center min-w-[80px] flex-shrink-0">
+                <p class="font-black text-sm" style="color:{{ $program->color }};">{{ substr($program->start_time,0,5) }}</p>
+                <p class="text-gray-400 text-xs">{{ substr($program->end_time,0,5) }}</p>
+            </div>
+            <div class="flex-1">
+                <h3 class="font-black text-gray-800 text-base">{{ $program->name }}</h3>
+                @if($program->host)
+                <p class="text-sm font-semibold mt-0.5" style="color:{{ $program->color }};">🎙 {{ $program->host }}</p>
+                @endif
+                @if($program->description)
+                <p class="text-gray-400 text-sm mt-1">{{ $program->description }}</p>
+                @endif
+            </div>
+            <span class="text-xs font-bold text-white px-3 py-1.5 rounded-full flex-shrink-0"
+                  style="background:{{ $program->color }};">
+                {{ $program->day_label }}
+            </span>
+        </div>
+        @empty
+        <div class="text-center py-16 text-gray-400">
+            <p class="text-4xl mb-3">📅</p>
+            <p class="font-semibold">No hay programas para domingos.</p>
+        </div>
+        @endforelse
+    </div>
+
+    {{-- Todos --}}
+    <div x-show="tab==='all'" x-cloak class="space-y-4">
+        @forelse($all as $program)
+        <div class="card-rp flex gap-4 items-center p-5 hover:shadow-lg transition"
+             style="border-left:4px solid {{ $program->color }};">
+            <div class="text-center min-w-[80px] flex-shrink-0">
+                <p class="font-black text-sm" style="color:{{ $program->color }};">{{ substr($program->start_time,0,5) }}</p>
+                <p class="text-gray-400 text-xs">{{ substr($program->end_time,0,5) }}</p>
+            </div>
+            <div class="flex-1">
+                <h3 class="font-black text-gray-800 text-base">{{ $program->name }}</h3>
+                @if($program->host)
+                <p class="text-sm font-semibold mt-0.5" style="color:{{ $program->color }};">🎙 {{ $program->host }}</p>
+                @endif
+                @if($program->description)
+                <p class="text-gray-400 text-sm mt-1">{{ $program->description }}</p>
+                @endif
+            </div>
+            <span class="text-xs font-bold text-white px-3 py-1.5 rounded-full flex-shrink-0"
+                  style="background:{{ $program->color }};">
+                {{ $program->day_label }}
+            </span>
+        </div>
+        @empty
+        <div class="text-center py-16 text-gray-400">
+            <p class="text-4xl mb-3">📅</p>
+            <p class="font-semibold">No hay programas configurados.</p>
+        </div>
+        @endforelse
+    </div>
+</section>
 @endsection
