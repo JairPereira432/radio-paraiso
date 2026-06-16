@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Panel Admin') — Radio Paraíso</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -29,9 +30,11 @@
 <body class="bg-gray-50" x-data="{ sidebarOpen: true }">
 
 <div class="flex min-h-screen">
+
     {{-- SIDEBAR --}}
     <aside class="w-64 bg-white border-r flex flex-col flex-shrink-0 sticky top-0 h-screen"
            style="border-color:#e0faf5;">
+
         {{-- Logo --}}
         <div class="p-5 border-b" style="border-color:#e0faf5;">
             <div class="flex items-center gap-2">
@@ -46,6 +49,7 @@
 
         {{-- Nav --}}
         <nav class="flex-1 p-4 space-y-1 overflow-y-auto">
+
             <p class="section-title px-3 mb-3">Principal</p>
             <a href="{{ route('admin.dashboard') }}"
                class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
@@ -53,6 +57,10 @@
             </a>
 
             <p class="section-title px-3 mb-3 mt-5">Contenido</p>
+            <a href="{{ route('admin.sliders.index') }}"
+               class="nav-link {{ request()->routeIs('admin.sliders.*') ? 'active' : '' }}">
+                🖼️ Sliders
+            </a>
             <a href="{{ route('admin.programs.index') }}"
                class="nav-link {{ request()->routeIs('admin.programs.*') ? 'active' : '' }}">
                 📅 Programación
@@ -68,10 +76,15 @@
             </a>
 
             <p class="section-title px-3 mb-3 mt-5">Sistema</p>
+            <a href="{{ route('admin.profile') }}"
+               class="nav-link {{ request()->routeIs('admin.profile') ? 'active' : '' }}">
+                👤 Mi Perfil
+            </a>
             <a href="{{ route('admin.settings') }}"
                class="nav-link {{ request()->routeIs('admin.settings') ? 'active' : '' }}">
                 ⚙️ Configuración
             </a>
+
         </nav>
 
         {{-- Footer sidebar --}}
@@ -101,6 +114,7 @@
 
     {{-- CONTENIDO PRINCIPAL --}}
     <main class="flex-1 overflow-auto">
+
         {{-- Header --}}
         <div class="bg-white border-b px-6 py-4 flex items-center justify-between sticky top-0 z-10"
              style="border-color:#e0faf5;">

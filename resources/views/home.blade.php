@@ -11,7 +11,7 @@
         @foreach($sliders as $i => $slide)
         <div x-show="current === {{ $i }}" x-cloak
              class="absolute inset-0 transition-opacity duration-1000"
-             style="background: url('{{ Storage::url($slide->image) }}') center/cover no-repeat;">
+             style="background: url('{{ $slide->image }}') center/cover no-repeat;">
             <div class="absolute inset-0" style="background:linear-gradient(to right, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 60%, transparent 100%);"></div>
         </div>
         @endforeach
