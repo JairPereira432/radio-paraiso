@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', $settings['radio_name'] ?? 'Radio Paraíso TV Digital')</title>
+    <title>@yield('title', $settings['radio_name'] ?? 'Paraíso TV Digital')</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -50,9 +50,8 @@
 <nav class="bg-white sticky top-0 z-50" style="border-bottom:3px solid transparent; border-image:linear-gradient(90deg,#00d4aa,#00b4d8,#f9c74f,#f8961e) 1; box-shadow:0 2px 20px #00d4aa18;">
     <div class="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
         <a href="{{ route('home') }}" class="flex items-center gap-2.5">
-            <div class="w-10 h-10 rounded-full flex items-center justify-center text-white text-xs font-black flex-shrink-0"
-                 style="background:linear-gradient(135deg,#00d4aa,#00b4d8,#f9c74f); box-shadow:0 4px 15px #00d4aa44;">RP</div>
-            <span class="grad-text text-base hidden sm:block">{{ $settings['radio_name'] ?? 'Radio Paraíso' }}</span>
+            <img src="{{ asset('images/logo.png') }}" alt="{{ $settings['radio_name'] ?? 'Paraíso TV Digital' }}"
+                 class="h-10 w-auto flex-shrink-0">
         </a>
 
         <div class="hidden md:flex items-center gap-8 text-sm">
@@ -123,11 +122,7 @@
 <footer class="bg-gray-900 text-white pb-20 pt-12" style="border-top:3px solid transparent; border-image:linear-gradient(90deg,#00d4aa,#00b4d8,#f9c74f,#f8961e) 1;">
     <div class="max-w-7xl mx-auto px-4 grid md:grid-cols-3 gap-8 mb-8">
         <div>
-            <div class="flex items-center gap-2 mb-3">
-                <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-black"
-                     style="background:linear-gradient(135deg,#00d4aa,#00b4d8,#f9c74f);">RP</div>
-                <span class="grad-text text-lg">{{ $settings['radio_name'] ?? 'Radio Paraíso' }}</span>
-            </div>
+            <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-14 w-auto mb-3">
             <p class="text-gray-400 text-sm">{{ $settings['radio_slogan'] ?? 'Los Grandes Clásicos de la Música' }}</p>
         </div>
         <div>
