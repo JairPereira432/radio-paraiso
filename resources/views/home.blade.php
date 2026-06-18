@@ -3,16 +3,35 @@
 @section('content')
 
 {{-- SLIDER HERO --}}
-<section class="relative overflow-hidden" style="min-height:90vh;"
+@php
+    $hasTextSlide = $sliders->contains(fn($s) => !empty($s->title) || !empty($s->subtitle));
+@endphp
+<section class="relative overflow-hidden" style="min-height: {{ $hasTextSlide ? '90vh' : '70vh' }};"
          x-data="{ current: 0, total: {{ max(count($sliders), 1) }}, autoplay: null }"
          x-init="autoplay = setInterval(() => current = (current + 1) % total, 5000)">
 
     @if($sliders->count())
         @foreach($sliders as $i => $slide)
-        <div x-show="current === {{ $i }}" x-cloak
-             class="absolute inset-0 transition-opacity duration-1000"
-             style="background: url('{{ $slide->image }}') center/cover no-repeat;">
+        @php $plain = empty($slide->title) && empty($slide->subtitle); @endphp
+        <div x-show="current === {{ $i }}"
+             x-transition:enter="transition ease-out duration-1000"
+             x-transition:enter-start="opacity-0 scale-105"
+             x-transition:enter-end="opacity-100 scale-100"
+             x-transition:leave="transition ease-in duration-700"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"
+             class="absolute inset-0 overflow-hidden"
+             style="transition-property: opacity, transform;">
+
+            @if($plain)
+            {{-- Fondo difuminado de la misma imagen para rellenar los bordes --}}
+            <div class="absolute inset-0" style="background: url('{{ $slide->image }}') center/cover no-repeat; filter: blur(40px) brightness(0.6) saturate(1.3); transform: scale(1.1);"></div>
+            {{-- Imagen nítida centrada, completa, sin recortar --}}
+            <div class="absolute inset-0" style="background: url('{{ $slide->image }}') center/contain no-repeat;"></div>
+            @else
+            <div class="absolute inset-0" style="background: url('{{ $slide->image }}') center/cover no-repeat;"></div>
             <div class="absolute inset-0" style="background:linear-gradient(to right, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 60%, transparent 100%);"></div>
+            @endif
         </div>
         @endforeach
     @else
@@ -21,15 +40,24 @@
     @endif
 
     {{-- Contenido del hero --}}
-    <div class="relative z-10 max-w-7xl mx-auto px-4 flex items-center" style="min-height:90vh;">
+    <div class="relative z-10 max-w-7xl mx-auto px-4 flex items-center" style="min-height: {{ $hasTextSlide ? '90vh' : '70vh' }};">
         <div class="max-w-2xl">
+            @if($hasTextSlide)
             <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur px-4 py-2 rounded-full mb-6 text-sm font-semibold text-white border border-white/20">
                 <span class="dot-live"></span> ONLINE · EN VIVO 24/7
             </div>
+            @endif
 
             @if($sliders->count())
                 @foreach($sliders as $i => $slide)
-                <div x-show="current === {{ $i }}" x-cloak>
+                @continue(empty($slide->title) && empty($slide->subtitle))
+                <div x-show="current === {{ $i }}"
+                     x-transition:enter="transition ease-out duration-700 delay-200"
+                     x-transition:enter-start="opacity-0 translate-y-4"
+                     x-transition:enter-end="opacity-100 translate-y-0"
+                     x-transition:leave="transition ease-in duration-300"
+                     x-transition:leave-start="opacity-100"
+                     x-transition:leave-end="opacity-0">
                     <h1 class="text-6xl md:text-7xl font-black text-white mb-4 leading-tight">
                         {!! nl2br(e($slide->title ?? ($settings['radio_name'] ?? 'Radio Paraíso'))) !!}
                     </h1>
@@ -46,7 +74,16 @@
                     </div>
                 </div>
                 @endforeach
-            @else
+            @endif
+
+            @if(!$hasTextSlide && $sliders->count())
+            <div class="flex flex-wrap gap-3 mt-6">
+                <button onclick="togglePlay()" class="btn-primary">🎙 Escuchar Radio</button>
+                <a href="{{ route('programs') }}" class="btn-outline" style="color:#fff; border-color:#fff;">📅 Ver Programación</a>
+            </div>
+            @endif
+
+            @if(!$sliders->count())
             <h1 class="text-6xl md:text-7xl font-black text-white mb-4 leading-tight">
                 <span style="color:#00d4aa;">RADIO</span><br>
                 <span style="background:linear-gradient(90deg,#f9c74f,#f8961e); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">PARAÍSO</span>
@@ -61,6 +98,7 @@
         </div>
 
         {{-- Player card --}}
+        @if($hasTextSlide)
         <div class="hidden lg:block ml-auto">
             <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 w-72">
                 <p class="text-white/60 text-xs font-bold uppercase tracking-widest mb-3">🎵 Transmitiendo Ahora</p>
@@ -92,6 +130,7 @@
                 </button>
             </div>
         </div>
+        @endif
     </div>
 
     {{-- Controles del slider --}}
