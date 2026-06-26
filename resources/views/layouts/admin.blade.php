@@ -37,14 +37,7 @@
 
         {{-- Logo --}}
         <div class="p-5 border-b" style="border-color:#e0faf5;">
-            <div class="flex items-center gap-2">
-                <div class="w-9 h-9 rounded-xl flex items-center justify-center text-white font-black text-xs"
-                     style="background:linear-gradient(135deg,#00d4aa,#00b4d8,#f9c74f);">RP</div>
-                <div>
-                    <p class="grad-text text-sm">Radio Paraíso</p>
-                    <p class="text-xs text-gray-400">Panel Admin</p>
-                </div>
-            </div>
+            <img src="{{ asset('images/logo-admin.png') }}" alt="Paraíso TV Admin" class="h-9 w-auto">
         </div>
 
         {{-- Nav --}}

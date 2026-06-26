@@ -20,10 +20,9 @@
         {{-- Info --}}
         <div>
             <div class="flex items-center gap-3 mb-6">
-                <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-white font-black text-lg"
-                     style="background:linear-gradient(135deg,#00d4aa,#00b4d8,#f9c74f);">RP</div>
+                <img src="{{ asset('images/logo.png') }}" alt="{{ $settings['radio_name'] ?? 'Radio Paraíso' }}"
+                class="h-16 w-auto flex-shrink-0">
                 <div>
-                    <p class="font-black text-gray-800">{{ $settings['radio_name'] ?? 'Radio Paraíso' }}</p>
                     <p class="text-sm font-semibold" style="color:#00d4aa;">Online · EN VIVO 24/7</p>
                 </div>
             </div>

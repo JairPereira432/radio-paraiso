@@ -157,20 +157,20 @@
             <div class="col-span-2 rounded-2xl p-6 text-white relative overflow-hidden"
                  style="background:linear-gradient(135deg,#f8961e,#f9c74f);">
                 <div class="text-4xl mb-3">📻</div>
-                <p class="font-black text-xl mb-1">DESDE 2004</p>
-                <p class="text-white/80 text-sm">Conectando corazones a través de la música</p>
+                <p class="font-black text-xl mb-1">DESDE EL 2024</p>
+                <p class="text-white/80 text-sm">Nos escuchas porque te escuchamos, a través del sentimiento musical.</p>
             </div>
             <div class="rounded-2xl p-5 text-white relative overflow-hidden"
                  style="background:linear-gradient(135deg,#00d4aa,#00b4d8);">
                 <div class="text-3xl mb-2">🎯</div>
                 <p class="font-black text-sm mb-1">MISIÓN</p>
-                <p class="text-white/80 text-xs">Conectar comunidades a través de la música y el entretenimiento de calidad.</p>
+                <p class="text-white/80 text-xs">Llegar a ti en tu trabajo, en tu casa y hasta en tu bolsillo, a través de la música y el entretenimiento de calidad.</p>
             </div>
             <div class="rounded-2xl p-5 text-white relative overflow-hidden"
                  style="background:linear-gradient(135deg,#90be6d,#43aa8b);">
                 <div class="text-3xl mb-2">🔭</div>
                 <p class="font-black text-sm mb-1">VISIÓN</p>
-                <p class="text-white/80 text-xs">Ser la emisora de referencia, reconocida por su calidad e innovación.</p>
+                <p class="text-white/80 text-xs">Ser la emisora de referencia, porque somos tus amigos.</p>
             </div>
         </div>
         <div>
@@ -179,11 +179,19 @@
                 LA VOZ DE <span style="color:#f8961e;">NUESTRA</span> COMUNIDAD
             </h2>
             <p class="text-gray-500 mb-4 leading-relaxed">
-                Somos la emisora líder de la región, con más de 20 años llevando la mejor música,
-                noticias y entretenimiento a todos los hogares.
+                Somos una estación radial online dedicada a la emisión de programas musicales.
+                Trabajamos por un mundo mejor, que ame la música del recuerdo, entregando entretenimiento
+                musical al público en general.
             </p>
             <ul class="space-y-2 mb-6">
-                @foreach(['Programación variada para toda la familia','Los Grandes Clásicos de los 70s, 80s y 90s','Música en vivo las 24 horas del día','Transmisión online en alta calidad','Comprometidos con nuestra comunidad'] as $item)
+                @foreach([
+                    'Programación variada pensando en tu buen gusto',
+                    'Los grandes clásicos de los años 60s, 70s, 80s y 90s, deleitan tus oídos',
+                    'Música en vivo las 24 horas contigo',
+                    'Transmisión online en alta fidelidad',
+                    'Compartimos contigo lo mejor de lo mejor en éxitos musicales',
+                    'Somos tus amigos',
+                ] as $item)
                 <li class="flex items-center gap-2 text-gray-600 text-sm">
                     <span class="w-2 h-2 rounded-full flex-shrink-0" style="background:#00d4aa;"></span>
                     {{ $item }}

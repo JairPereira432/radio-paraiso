@@ -12,10 +12,8 @@
 
 <div class="w-full max-w-md">
     <div class="text-center mb-8">
-        <div class="w-16 h-16 rounded-2xl flex items-center justify-center text-white font-black text-xl mx-auto mb-4"
-             style="background:linear-gradient(135deg,#00d4aa,#00b4d8,#f9c74f); box-shadow:0 8px 30px #00d4aa44;">RP</div>
-        <h1 class="text-2xl font-black text-white">Panel Administrativo</h1>
-        <p class="text-white/50 text-sm mt-1">Radio Paraíso TV Digital</p>
+        <img src="{{ asset('images/logo-admin.png') }}" alt="Paraíso TV Admin" class="h-20 w-auto mx-auto mb-4">
+        <p class="text-white/50 text-sm mt-1">Panel Administrativo</p>
     </div>
 
     <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-8">
